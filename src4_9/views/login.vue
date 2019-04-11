@@ -6,8 +6,7 @@
       <input type="text" v-model="username"><br>
       <label>密码:</label>
       <input type="text" v-model="password"><br>
-      <input type="submit" value="登录" @click="dologin"><br>
-      <router-link to="/register">注册账号</router-link>
+      <input type="submit" value="登录" @click="dologin">
     </div>
 		<router-link to="/blog">登录成功</router-link>
 	</div>
@@ -25,11 +24,9 @@
     methods:{
       dologin(){
         let data={'username':this.username,'password':this.password};
-        axios.post('http://192.168.43.238:8090/check',data)
-        // axios.post('/api/check',data)
-          .then(res=>{
-            console.log(res);
-            const id=res.data.object.userid;
+        axios.post('/api/check',data)
+          .then(response=>{
+            const id=response.data.object.userid;
             // console.log(id);
             if (true){
               this.$router.push(`/${id}/blog`)

@@ -25,10 +25,17 @@
                 <div class="panel-body" style="background:#eee;"  v-show="isCommnet=!isCommnet">
                     <h3>当前没有评论请稍后再试</h3>
                 </div>
+
+
             </div>
 
-            <p v-if="this.blog_content.classid==9"><router-link to="/blog/ajax_base" type="button" class="btn  btn-info">返回日志列表</router-link></p>
-            </div>
+			<p v-if="this.blog_content.classid==9"><router-link to="/blog/ajax_base" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+            <p v-if="this.blog_content.classid==10"><router-link to="/blog/ajax_progress" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+            <p v-if="this.blog_content.classid==11"><router-link to="/blog/mysql_base" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+            <p v-if="this.blog_content.classid==12"><router-link to="/blog/mysql_progress" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+            <p v-if="this.blog_content.classid==13"><router-link to="/blog/java_base" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+            <p v-if="this.blog_content.classid==14"><router-link to="/blog/java_progress" type="button" class="btn  btn-info">返回日志列表</router-link></p>	
+        </div>
     </div>
 </template>
 <script>
@@ -106,7 +113,7 @@ export default {
             this.blog_comment_id=blog_comments.find(detail=>detail.id===blog_id)
             console.log(this.blog_comment_id)
 
-
+            
 
 
 

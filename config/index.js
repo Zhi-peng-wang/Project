@@ -12,13 +12,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://47.101.184.147:8081/vueblog/getMyClass',  //目标接口域名
+        // target: 'http://47.101.184.147:8081',  //目标接口域名
+        // target:'http://192.168.1.101:8090',
+        target:'http://192.168.43.238:8090',
         changeOrigin: true,  //是否跨域
         pathRewrite: {
-          '^/api': '/api'   //重写接口
+          '^/api': ''   //重写接口
         }
       }
     },
+
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

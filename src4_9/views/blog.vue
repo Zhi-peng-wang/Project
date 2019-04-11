@@ -51,9 +51,8 @@
                   {{t1.classname}}
                 </template>
                 <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
-                  <el-menu-item :key="index">
-                    <!--<router-link :to="`/${$route.params.id}`+t2.url" @click.native="send_id(t2.classid)">{{t2.classname}}{{t2.classid}}</router-link>-->
-                    <router-link :to="`/${$route.params.id}`+'/blog/blog_list'" @click.native="send_id(t2.classid)">{{t2.classname}}{{t2.classid}}</router-link>
+                  <el-menu-item :index="t2.url" :key="index">
+                    <router-link :to="t2.url">{{t2.classname}}{{t2.classid}}</router-link>
                   </el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -80,7 +79,6 @@
 
 <script>
   import axios from 'axios'
-  import event from '@/event.js'
 
   export default {
     data() {
@@ -93,71 +91,38 @@
         ],
         activeIndex: '3',
         blog_url_1: [],
-        blog_url_2: [],
-        blog_classid:9,
-        blog_title:[],
+        blog_url_2: []
       };
     },
     created() {
-      let id = this.$route.params.id;
+      let id = this.$route.params.id
+      // axios.get("../../static/tb_class.json")
+      // axios.get(`http://192.168.43.238:8090/getMyClass?userid=${id}`)
       axios.post(`http://192.168.43.238:8090/getMyClass`, {userid: id})
         .then((response) => {
           const result = response.data.object;
+          console.log(result);
+
           //一级标题的相关内容
           result.map(item => {
             if (item.depth == 1 && item.parentid == 1) {
               return this.blog_url_1.push(item)
             }
           });
+          console.log(this.blog_url_1);
+
+
           // 二级标题的相关内容
           result.map(item => {
             if (item.depth == 2) {
               return this.blog_url_2.push(item)
             }
           });
+          console.log(this.blog_url_2);
+
         }).catch((error) => {
-          console.log("请求失败" + error);
-        });
-       //获取数据
-      //首先传一个默认classid为9得数据
-      axios.post('http://192.168.43.238:8090/getclassBlog',{classid:this.blog_classid})
-        .then(res=>{
-          const result =res.data.object;
-          const blog_title=result.map(item=>({
-            blogid:item.blogid,
-            classid:item.classid,
-            title:item.title
-          }));
-          //将此时的数据赋给上面的空数组
-          this.blog_title=blog_title;
-          event.$emit('toChangeTitle',this.blog_title);
-        })
-
-
-    //  简便方法  此处方法还没有测试  待到4.12日早上测试   代替上方的方法
-    //   this.send_id(this.blog_classid)
-    },
-    methods:{
-      send_id(classid) {
-        console.log("传递参数classid给后台:"+classid);
-        //数据classid应该和后台所需要得数据保持一个字段
-        //设想要拿到数据，通过组件之间得通信，想数据传递到需要数据得组件里面
-        axios.post('http://192.168.43.238:8090/getclassBlog',{classid:classid})
-          .then(res=>{
-            // console.log(res);
-            const result =res.data.object;
-            const blog_title=result.map(item=>({
-              blogid:item.blogid,
-              classid:item.classid,
-              title:item.title
-            }));
-            //将此时的数据赋给上面的空数组
-            this.blog_title=blog_title;
-            event.$emit('toChangeTitle',this.blog_title);
-          }).catch(error=>{
-            console.log("请求数据失败"+error);
-        })
-      }
+        console.log("请求失败" + error);
+      })
     }
   };
 </script>
