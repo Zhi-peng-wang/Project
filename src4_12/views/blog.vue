@@ -4,7 +4,7 @@
       <img src="holder.js/100px60">
       <br>
     </div>
-    <!--轮播图-->
+    <!--导航条-->
     <div class="branner">
       <el-carousel :interval="2000" type="card" height="400px">
         <el-carousel-item v-for="item in imgs" :key="item.id">
@@ -15,26 +15,24 @@
     </div>
     <div class="container">
       <!--导航-->
-      <div class="nav_bar" style="width:90%;margin:0 auto">
+      <div class="nav_bar" style="width:37%;margin:0 auto">
+        <!-- <img src="holder.js/100px60" /> -->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-          <el-menu-item>
-            <img src="../assets/tx.jpg">
-          </el-menu-item>
-          <el-menu-item>
-            <h3>王小明</h3>
-          </el-menu-item>
-          <el-menu-item index="1" style="margin-left:30%">主页</el-menu-item>
+          <el-menu-item index="1">主页</el-menu-item>
           <el-menu-item index="2">
-            <router-link :to="`/${$route.params.id}`+'/album'">相册</router-link>
+            <router-link to="/album">相册</router-link>
           </el-menu-item>
           <el-menu-item index="3">
-            <router-link :to="`/${$route.params.id}`+'/blog'">日志</router-link>
+            <router-link to="/blog">日志</router-link>
           </el-menu-item>
-          <el-menu-item index="4">留言</el-menu-item>
-          <el-menu-item index="5">访客</el-menu-item>
-          <el-menu-item index="6">评论</el-menu-item>
-          <el-menu-item index="7">
-            <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
+          <el-menu-item index="4">
+            留言
+          </el-menu-item>
+          <el-menu-item index="5">
+            访客
+          </el-menu-item>
+          <el-menu-item index="6">
+            评论
           </el-menu-item>
         </el-menu>
         <br>
@@ -62,7 +60,6 @@
             </el-menu>
           </el-col>
         </div>
-        <!--这是日志的title-->
         <div class="col-md-8 col-xs-8 panel panel-primary" style="padding: 0;" >
           <div class="panel-heading">
             <h4>详情列表</h4>
@@ -84,7 +81,6 @@
 <script>
   import axios from 'axios'
   import event from '@/event.js'
-  import {getClassBlog, getClass} from "../api";
 
   export default {
     data() {
@@ -104,10 +100,9 @@
     },
     created() {
       let id = this.$route.params.id;
-      getClass({userid: id,typeid:1})
-        //得到分类名称
+      axios.post(`/api/getMyClass`, {userid: id})
         .then((response) => {
-          const result = response.object;
+          const result = response.data.object;
           //一级标题的相关内容
           result.map(item => {
             if (item.depth == 1 && item.parentid == 1) {
@@ -119,8 +114,9 @@
             if (item.depth == 2) {
               return this.blog_url_2.push(item)
             }
-          })
-
+          });
+        }).catch((error) => {
+          console.log("请求失败" + error);
         });
     //  简便方法  此处方法还没有测试  待到4.12日早上测试   代替上方的方法
     //  测试成功
@@ -128,15 +124,13 @@
     },
     methods:{
       send_id(classid) {
-        console.log("blog组件传递参数classid给后台:"+classid);
+        console.log("传递参数classid给后台:"+classid);
         //数据classid应该和后台所需要得数据保持一个字段
         //设想要拿到数据，通过组件之间得通信，想数据传递到需要数据得组件里面
-        getClassBlog({classid:classid})
+        axios.post('/api/getclassBlog',{classid:classid})
           .then(res=>{
-            console.log(res);
-            console.log("-------------------------");
-            //此处的res已经拿到了res.data数据,在封装的方法中已经完成
-            const result =res.object;
+            // console.log(res);
+            const result =res.data.object;
             const blog_title=result.map(item=>({
               blogid:item.blogid,
               classid:item.classid,
@@ -158,6 +152,7 @@
     color: black;
     display: block;
   }
+
   li {
     list-style: none;
   }

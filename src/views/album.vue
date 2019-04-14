@@ -10,59 +10,40 @@
                     <el-menu-item>
                         <h3>王小明</h3>
                     </el-menu-item>
-                    <el-menu-item index="1" style="margin-left:40%">主页</el-menu-item>
+                    <el-menu-item index="1" style="margin-left:30%">主页</el-menu-item>
                     <el-menu-item index="2">
-                        <router-link to="/album">相册</router-link>
+                      <router-link :to="`/${$route.params.id}`+'/album'">相册</router-link>
                     </el-menu-item>
                     <el-menu-item index="3">
-                        <router-link to="/blog">日志</router-link>
+                      <router-link :to="`/${$route.params.id}`+'/blog'">日志</router-link>
                     </el-menu-item>
                     <el-menu-item index="4">留言</el-menu-item>
                     <el-menu-item index="5">访客</el-menu-item>
                     <el-menu-item index="6">评论</el-menu-item>
+                  <el-menu-item index="7">
+                    <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
+                  </el-menu-item>
                 </el-menu>
                 <br>
             </div>
         </div>
-        <div class="container">
-            <div class="liulan">
-                <div class="row">
-                    <ul class="col-md-3" v-for="(t,index) in album" :key="index" v-show="t.parentid===6|t.parentid===7|t.parentid===8">
-                        <li>
-                            <router-link :to="`/photo/${t.classid}`">
-                                <div class="fj_img">
-                                    <div>
-                                        <img :src="t.url">
-                                    </div>
-                                </div>
-                                <div class="fj_title">
-                                    <h4>{{t.classname}}</h4>
-                                </div>
-                                <div class="fj_content">
-                                    <p>好咖啡要和朋友一起品尝，好“模板”也要和同样喜欢它的人一起分享。</p>
-                                </div>
-                            </router-link>
-                            
-                        </li>                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
+        <router-view></router-view>
         <div class="container">
             <div class="row">
                 <div class="col-md-offset-4 col-md-4 ">
                     <el-pagination  layout="prev, pager, next" :total="1000"></el-pagination>
                 </div>
-                
+
             </div>
         </div>
-        
-        
     </div>
 </template>
 <script>
-import axios from "axios";
+
+
+
+import {getPhotoClass} from "../api";
+
 export default {
     data() {
         return {
@@ -70,24 +51,27 @@ export default {
             album: []
         };
     },
-    created() {
-        axios.get("../../static/tb_class.json").then(data => {
-            console.log(data.data);
-            const result = data.data;
-            const albums = result.map(item => ({
-                url: item.url,
-                classname: item.classname,
-                classid:item.classid,
-                parentid:item.parentid
-            }));
-            // this.album=albums.find(detail => detail.photoid===2)
-            this.album = albums;
-            // console.log(this.album);
-        });
+    mounted() {
+      let id = this.$route.params.id;
+      getPhotoClass({userid:id})
+        .then(res=>{
+          console.log("请求photo相册数据成功");
+          console.log(res);
+          const result = res.object;
+          const albums = result.map(item => ({
+              classid:item.classid,
+              photo:item.photo,
+              title:item.title
+          }));
+          this.album = albums;
+          console.log(this.album);
+        }).catch(error=>{
+        console.log("请求photo相册数据失败");
+      })
     }
 };
 </script>
-<style>
+<style scoped>
 li {
     list-style: none;
 }
@@ -110,7 +94,7 @@ li {
 }
 a {
     text-decoration: none;
-}   
+}
 .router-link-active {
     text-decoration: none;
 }

@@ -11,13 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        // target: 'http://47.101.184.147:8081',  //目标接口域名
-        // target:'http://192.168.1.101:8090',
-        target:'http://192.168.43.238:8090',
+      '/api': {// 匹配所有以 '/api'开头的请求路径
+        // target: 'http://47.101.184.147:8081/vueblog',  //目标接口域名
+        target:'http://192.168.43.238:8090/',// 代理目标的基础路径
         changeOrigin: true,  //是否跨域
-        pathRewrite: {
-          '^/api': ''   //重写接口
+        pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
+          '^/api': '',
         }
       }
     },

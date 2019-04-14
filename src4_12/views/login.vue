@@ -9,13 +9,12 @@
       <input type="submit" value="登录" @click="dologin"><br>
       <router-link to="/register">注册账号</router-link>
     </div>
+		<router-link to="/blog">登录成功</router-link>
 	</div>
 </template>
 
 <script>
   import axios from 'axios'
-  import {login} from "../api";
-
   export default {
     data(){
       return{
@@ -26,23 +25,20 @@
     methods:{
       dologin(){
         let data={'username':this.username,'password':this.password};
+        axios.post('/api/check',data)
         // axios.post('/api/check',data)
-        // axios.post('/api/check',data)
-        login(data)
           .then(res=>{
             console.log(res);
-            const id=res.object.userid;
-            // const id=res.object.userid;
+            const id=res.data.object.userid;
             // console.log(id);
             if (true){
               this.$router.push(`/${id}/blog`)
             }
             // console.log(response);
           }).catch(error=>{
-          console.log("error"+error);
+          console.log(error);
         })
       }
-
     }
 
   }
