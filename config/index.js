@@ -12,15 +12,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {// 匹配所有以 '/api'开头的请求路径
-        // target: 'http://47.101.184.147:8081/vueblog',  //目标接口域名
-        target:'http://192.168.43.238:8090/',// 代理目标的基础路径
+        target: 'http://47.101.184.147:8081/vueblog',  //目标接口域名
+        // target:'http://192.168.43.238:8090/',// 代理目标的基础路径
+        // target:'http://192.168.1.104:8090/',// 代理目标的基础路径
+        // target:'http://192.168.1.101:8090/',// 代理目标的基础路径
+        // target:'http://192.168.1.100:8090/',// 代理目标的基础路径
+        // target:'http://192.168.43.51:8090/',// 代理目标的基础路径
         changeOrigin: true,  //是否跨域
         pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
           '^/api': '',
         }
       }
     },
-
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

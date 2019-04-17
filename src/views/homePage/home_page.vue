@@ -41,11 +41,10 @@
               <div class="panel-body" style="padding: 15px 5px">
                 <div class="list-group">
                   <button type="button" class="list-group-item">
-                    <span class="badge">14</span>
                     <router-link :to="`/${$route.params.id}`+'/home_page/person_data'">个人资料</router-link>
                   </button>
                   <button type="button" class="list-group-item">
-                    日志列表
+                    <router-link :to="`/${$route.params.id}`+'/home_page/all_blog_list'">日志列表</router-link>
                   </button>
                   <button type="button" class="list-group-item">
                     日志类别

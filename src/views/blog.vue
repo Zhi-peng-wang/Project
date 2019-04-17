@@ -54,8 +54,12 @@
                 </template>
                 <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
                   <el-menu-item :key="index">
-                    <!--<router-link :to="`/${$route.params.id}`+t2.url" @click.native="send_id(t2.classid)">{{t2.classname}}{{t2.classid}}</router-link>-->
-                    <router-link :to="`/${$route.params.id}`+'/blog/blog_list'" @click.native="send_id(t2.classid)">{{t2.classname}}{{t2.classid}}</router-link>
+                    <router-link :to="`/${$route.params.id}`+'/blog/blog_list'"
+                                 @click.native="send_id(t2.classid)">
+                                  {{t2.classname}}
+                      <el-badge :value="t2.num" class="item" type="primary" style="float: right;margin-top: 5px">
+                      </el-badge>
+                    </router-link>
                   </el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -67,8 +71,17 @@
           <div class="panel-heading">
             <h4>详情列表</h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body" @click="unShow">
             <router-view></router-view>
+          </div>
+          <div class="block" style="margin-left: 230px;" v-if="fenye_show">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="page_size"
+              layout="total, prev, pager, next, jumper"
+              :total="total">
+            </el-pagination>
           </div>
         </div>
       </div>
@@ -82,7 +95,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import event from '@/event.js'
   import {getClassBlog, getClass} from "../api";
 
@@ -100,9 +112,17 @@
         blog_url_2: [],
         blog_classid:9,
         blog_title:[],
+        totalElements:"",
+        size:"",
+        currentPage: 1,
+        total:0,
+        page_size:0,
+        page_number:0,
+        fenye_show:true
       };
     },
-    created() {
+    mounted() {
+
       let id = this.$route.params.id;
       getClass({userid: id,typeid:1})
         //得到分类名称
@@ -120,36 +140,49 @@
               return this.blog_url_2.push(item)
             }
           })
-
         });
-    //  简便方法  此处方法还没有测试  待到4.12日早上测试   代替上方的方法
-    //  测试成功
       this.send_id(this.blog_classid)
     },
     methods:{
+      unShow(){
+        console.log("发生了点击事件");
+        this.fenye_show=false
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val-1}`);
+        this.page_number=`${val-1}`;
+        console.log(this.page_number);
+        this.O_getClassBlog()
+      },
       send_id(classid) {
         console.log("blog组件传递参数classid给后台:"+classid);
-        //数据classid应该和后台所需要得数据保持一个字段
-        //设想要拿到数据，通过组件之间得通信，想数据传递到需要数据得组件里面
-        getClassBlog({classid:classid})
+        this.blog_classid=classid;
+        this.fenye_show=true;
+        this.O_getClassBlog()
+      },
+      O_getClassBlog(){
+        getClassBlog({classid:this.blog_classid,pagenum:this.page_number})
           .then(res=>{
             console.log(res);
             console.log("-------------------------");
             //此处的res已经拿到了res.data数据,在封装的方法中已经完成
-            const result =res.object;
+            const result =res.object.content;
+            this.total=res.object.totalElements;
+            this.page_size=res.object.size;
             const blog_title=result.map(item=>({
               blogid:item.blogid,
               classid:item.classid,
-              title:item.title
+              title:item.title,
             }));
             //将此时的数据赋给上面的空数组
             this.blog_title=blog_title;
             event.$emit('toChangeTitle',this.blog_title);
           }).catch(error=>{
-            console.log("请求数据失败"+error);
+          console.log("请求数据失败"+error);
         })
-      }
-    }
+      },
+    },
+
   };
 </script>
 

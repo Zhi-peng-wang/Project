@@ -16,3 +16,17 @@ new Vue({
   template: '<App/>',
 	router:router
 });
+// router.beforeEach((to,from,next)=>{
+//   if (to.meta.needLogin){
+//     console.log("需要登录");
+//   }else {
+//     next()
+//   }
+// });
+// router.beforeEach((to,from,next)=>{
+//   if (!userid){
+//     next({path:'/login'})
+//   }else{
+//     next()
+//   }
+// });

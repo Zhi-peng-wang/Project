@@ -28,14 +28,6 @@
             </div>
         </div>
         <router-view></router-view>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-offset-4 col-md-4 ">
-                    <el-pagination  layout="prev, pager, next" :total="1000"></el-pagination>
-                </div>
-
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -53,7 +45,7 @@ export default {
     },
     mounted() {
       let id = this.$route.params.id;
-      getPhotoClass({userid:id})
+      getPhotoClass({userid:id,typeid:2})
         .then(res=>{
           console.log("请求photo相册数据成功");
           console.log(res);

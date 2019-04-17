@@ -5,6 +5,7 @@ import register from "../views/register"
 import home_page from "../views/homePage/home_page.vue"
 import person_data from "../views/homePage/personData/person_data.vue"
 import add_blog from "../views/homePage/blog/add_blog.vue"
+import all_blog_list from "../views/homePage/blog/all_blog_list"
 import blog from '../views/blog'
 import blog_list from '../views/blog_list'
 import blog_content from '../views/blog_content.vue'
@@ -21,8 +22,12 @@ export default new VueRouter({
 	routes:[
 		{
 			path:'',
-			component:login
+			redirect:'/login'
 		},
+    {
+      path:'/login',
+      component:login
+    },
     {
       path:'/register',
       component:register
@@ -43,7 +48,11 @@ export default new VueRouter({
         {
           path:'add_blog',
           component:add_blog
-        }
+        },
+        {
+          path:'all_blog_list',
+          component:all_blog_list
+        },
       ]
     },
 		{
